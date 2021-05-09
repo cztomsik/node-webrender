@@ -96,6 +96,14 @@ impl Viewport {
         self.renderer.render()
     }
 
+    pub fn node_rect(&self, node: NodeId) -> (f32, f32, f32, f32) {
+        let ln = &self.layout_nodes.borrow()[node];
+        let (x, y) = ln.offset();
+        let (w, h) = ln.size();
+
+        (x, y, w, h)
+    }
+
     // TODO: this is wrong anyway because children can be bigger than their parents
     //       so we will need some kind of AABB tree anyway
     // TODO: display: none

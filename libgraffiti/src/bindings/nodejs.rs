@@ -69,7 +69,9 @@ macro_rules! impl_from_to_napi {
             fn from_napi(env: NapiEnv, napi_value: NapiValue) -> Self {
                 let mut val = Default::default();
                 #[allow(unused_unsafe)]
-                unsafe { check!($from(env, napi_value, &mut val)) }
+                unsafe {
+                    check!($from(env, napi_value, &mut val))
+                }
                 val
             }
         }
@@ -91,6 +93,11 @@ impl_from_to_napi!(bool, napi_get_value_bool, napi_get_boolean);
 impl_from_to_napi!(u32, napi_get_value_uint32, napi_create_uint32);
 impl_from_to_napi!(i32, napi_get_value_int32, napi_create_int32);
 impl_from_to_napi!(f64, napi_get_value_double, napi_create_double);
+impl_from_to_napi!(
+    f32,
+    |env, v, res: &mut _| { *res = f64::from_napi(env, v) as _; NapiStatus::Ok },
+    |env, v, res| napi_create_double(env, v as _, res)
+);
 
 impl FromNapi for String {
     fn from_napi(env: NapiEnv, napi_value: NapiValue) -> Self {
@@ -145,7 +152,7 @@ impl<T: ToNapi + Clone> ToNapi for Option<T> {
                 check!(napi_get_null(env, &mut v));
 
                 v
-            }
+            },
         }
     }
 }
@@ -191,6 +198,22 @@ impl<A: ToNapi, B: ToNapi, C: ToNapi> ToNapi for (A, B, C) {
             check!(napi_set_element(env, arr, 0, self.0.to_napi(env)));
             check!(napi_set_element(env, arr, 1, self.1.to_napi(env)));
             check!(napi_set_element(env, arr, 2, self.2.to_napi(env)));
+
+            arr
+        }
+    }
+}
+
+impl<A: ToNapi, B: ToNapi, C: ToNapi, D: ToNapi> ToNapi for (A, B, C, D) {
+    fn to_napi(&self, env: NapiEnv) -> NapiValue {
+        unsafe {
+            let mut arr = std::mem::zeroed();
+            check!(napi_create_array(env, &mut arr));
+
+            check!(napi_set_element(env, arr, 0, self.0.to_napi(env)));
+            check!(napi_set_element(env, arr, 1, self.1.to_napi(env)));
+            check!(napi_set_element(env, arr, 2, self.2.to_napi(env)));
+            check!(napi_set_element(env, arr, 3, self.3.to_napi(env)));
 
             arr
         }

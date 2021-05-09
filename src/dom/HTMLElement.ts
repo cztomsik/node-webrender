@@ -1,6 +1,6 @@
 import { Element } from './index'
 import { CSSStyleDeclaration } from '../css/CSSStyleDeclaration'
-import { setElementStyleProp } from './Document'
+import { setElementStyleProp, getNodeRect } from './Document'
 
 export abstract class HTMLElement extends Element implements globalThis.HTMLElement {
   #style
@@ -47,12 +47,25 @@ export abstract class HTMLElement extends Element implements globalThis.HTMLElem
     this._fire('focus')
   }
 
-  // TODO
-  offsetParent
-  offsetLeft
-  offsetTop
-  offsetWidth
-  offsetHeight
+  get offsetParent() {
+    return this.parentElement
+  }
+
+  get offsetLeft() {
+    return getNodeRect(this.ownerDocument, this).left
+  }
+
+  get offsetTop() {
+    return getNodeRect(this.ownerDocument, this).top
+  }
+
+  get offsetWidth() {
+    return getNodeRect(this.ownerDocument, this).width
+  }
+
+  get offsetHeight() {
+    return getNodeRect(this.ownerDocument, this).height
+  }
 
   // later
   enterKeyHint

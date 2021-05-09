@@ -325,6 +325,10 @@ export const getAttribute = (doc, el, k) => native.document_attribute(doc[DOC_ID
 export const setAttribute = (doc, el, k, v) => native.document_set_attribute(doc[DOC_ID], el[NODE_ID], k, v)
 export const removeAttribute = (doc, el, k) => native.document_remove_attribute(doc[DOC_ID], el[NODE_ID], k)
 export const getAttributeNames = (doc, el) => native.document_attribute_names(doc[DOC_ID], el[NODE_ID])
+export const getNodeRect = (doc, el) => {
+  const [left, top, width, height] = native.viewport_node_rect(doc.__VIEWPORT_ID, el[NODE_ID])
+  return { left, top, width, height }
+}
 export const setElementStyleProp = (doc, el, prop, val) => native.document_set_element_style_property(doc[DOC_ID], el[NODE_ID], prop, val)
 export const insertChild = (doc, parent, child, index) => native.document_insert_child(doc[DOC_ID], parent[NODE_ID], child[NODE_ID], index)
 export const removeChild = (doc, parent, child) => native.document_remove_child(doc[DOC_ID], parent[NODE_ID], child[NODE_ID])

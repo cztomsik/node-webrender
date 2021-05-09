@@ -82,6 +82,7 @@ macro_rules! export_api {
                 //wait.recv().unwrap();
             },
             viewport_resize: |vp, w: f64, h: f64| ctx!().viewports[vp].resize(((w as _, h as _))),
+            viewport_node_rect: |vp, el| ctx!().viewports[vp].node_rect(el),
             viewport_element_from_point: |vp, x: f64, y: f64| ctx!().viewports[vp].element_from_point((x as _, y as _)),
             viewport_drop: |vp| drop(ctx!().viewports.remove(vp)),
 
