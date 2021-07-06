@@ -13,7 +13,7 @@
   "dependencies": {
     "htmlparser2": "^6.0.1",
     "node-fetch": "^2.6.1",
-    "ws": "^7.4.5"
+    "ws": "^7.4.6"
   },
   "files": [
     "src",
